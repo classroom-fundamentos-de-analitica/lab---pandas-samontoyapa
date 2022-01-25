@@ -8,6 +8,7 @@ Utilice los archivos `tbl0.tsv`, `tbl1.tsv` y `tbl2.tsv`, para resolver las preg
 
 """
 import pandas as pd
+import numpy as np
 
 tbl0 = pd.read_csv("tbl0.tsv", sep="\t")
 tbl1 = pd.read_csv("tbl1.tsv", sep="\t")
@@ -22,8 +23,7 @@ def pregunta_01():
     40
 
     """
-    return
-
+    return tbl0.shape[0]
 
 def pregunta_02():
     """
@@ -33,7 +33,7 @@ def pregunta_02():
     4
 
     """
-    return
+    return tbl0.shape[1]
 
 
 def pregunta_03():
@@ -50,8 +50,9 @@ def pregunta_03():
     Name: _c1, dtype: int64
 
     """
-    return
+    result = tbl0.value_counts("_c1")
 
+    return result
 
 def pregunta_04():
     """
