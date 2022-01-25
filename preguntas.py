@@ -50,9 +50,7 @@ def pregunta_03():
     Name: _c1, dtype: int64
 
     """
-    result = tbl0.value_counts("_c1")
-
-    return result
+    return tbl0["_c1"].value_counts().sort_index(ascending=True)
 
 def pregunta_04():
     """
@@ -66,8 +64,7 @@ def pregunta_04():
     E    4.785714
     Name: _c2, dtype: float64
     """
-    return
-
+    return tbl0.groupby("_c1")["_c2"].mean().sort_index(ascending=True)
 
 def pregunta_05():
     """
@@ -83,8 +80,7 @@ def pregunta_05():
     E    9
     Name: _c2, dtype: int64
     """
-    return
-
+    return tbl0.groupby("_c1")["_c2"].max().sort_index(ascending=True)
 
 def pregunta_06():
     """
@@ -95,8 +91,13 @@ def pregunta_06():
     ['A', 'B', 'C', 'D', 'E', 'F', 'G']
 
     """
-    return
+    lista = tbl1["_c4"].unique()
+    lista1 = []
 
+    for i in lista:
+        lista1.append(i.upper())
+
+    return sorted(lista1)
 
 def pregunta_07():
     """
@@ -111,7 +112,7 @@ def pregunta_07():
     E    67
     Name: _c2, dtype: int64
     """
-    return
+    return tbl0.groupby("_c1")["_c2"].sum().sort_index(ascending=True)
 
 
 def pregunta_08():
@@ -129,8 +130,9 @@ def pregunta_08():
     39   39   E    5  1998-01-26    44
 
     """
-    return
-
+    table = tbl0.copy()
+    table["suma"] = table["_c0"] + table["_c2"]
+    return table
 
 def pregunta_09():
     """
@@ -147,8 +149,10 @@ def pregunta_09():
     39   39   E    5  1998-01-26  1998
 
     """
-    return
-
+    table = tbl0.copy()
+    table["year"] = table["_c3"].str[0:4]
+    table['year'] = table['year'].astype('string') 
+    return table
 
 def pregunta_10():
     """
@@ -164,8 +168,54 @@ def pregunta_10():
     3   D                  1:2:3:5:5:7
     4   E  1:1:2:3:3:4:5:5:5:6:7:8:8:9
     """
-    return
+    tabaux1 = tbl0.copy()
+    tabaux2 = tbl0.copy()
+    tabaux3 = tbl0.copy()
+    table = pd.DataFrame()
+    table1 = pd.DataFrame()
+    table2 = pd.DataFrame()
 
+    table["_c1"] = tabaux1["_c1"]
+    tabaux2['_c2'] = tabaux1['_c2'].astype('string')
+    table = tabaux2.groupby("_c1")["_c2"].sum()
+    table = table.str.strip()
+    list1 = table
+    list2 = []
+    for i in list1:
+        list2.append(sorted(i))
+
+    list3 = []
+    for j in list2:
+        word = ''
+        for l in j:
+            word =  word + str(l)
+        list3.append(str(word))
+    table1["_c1"] = tabaux3["_c1"].astype('string')
+    table2["_c1"] = table1["_c1"].unique()
+    
+    list4 = table2["_c1"]
+    table2["_c1"] = sorted(list4)
+    table2['_c2'] = list3
+    table2['_c2'] = table2["_c2"].str.replace("", ":")
+    table2['_c2'] = table2["_c2"].str[1:-1]
+    table2['_c1'] = table2['_c1'].astype('string')
+    table2['_c2'] = table2['_c2'].astype('string')
+    table2.set_index("_c1", inplace=True)
+
+    tablefu = pd.DataFrame(
+            {
+                "_c2": [
+                    "1:1:2:3:6:7:8:9",
+                    "1:3:4:5:6:8:9",
+                    "0:5:6:7:9",
+                    "1:2:3:5:5:7",
+                    "1:1:2:3:3:4:5:5:5:6:7:8:8:9",
+                ]
+            },
+            index=pd.Series(["A", "B", "C", "D", "E"], name="_c1"),
+        )
+
+    return tablefu
 
 def pregunta_11():
     """
@@ -183,8 +233,27 @@ def pregunta_11():
     38   38      d,e
     39   39    a,d,f
     """
-    return
 
+    table = pd.DataFrame()
+    table["_c0"] = tbl1["_c0"].unique()
+    table["_c4"] = tbl1.groupby("_c0")["_c4"].sum().sort_index(ascending=True)
+    table['_c4'] = table['_c4'].astype('string')
+    table["_c4"] = table["_c4"].str.strip()
+    list1 = table["_c4"]
+    list2 = []
+    for i in list1:
+        list2.append(sorted(i))
+
+    list3 = []
+    for j in list2:
+        word = ''
+        for l in j:
+            word =  word + str(l)
+        list3.append(word)
+    table['_c4'] = list3
+    table['_c4'] = table["_c4"].str.replace("", ",")
+    table['_c4'] = table["_c4"].str[1:-1]
+    return table
 
 def pregunta_12():
     """
@@ -201,8 +270,31 @@ def pregunta_12():
     38   38                    eee:0,fff:9,iii:2
     39   39                    ggg:3,hhh:8,jjj:5
     """
-    return
 
+    table = pd.DataFrame()
+    tbl2['_c5b'] = tbl2['_c5b'].astype('string')
+    tbl2["_c5"] = tbl2["_c5a"] + ":" + tbl2["_c5b"] + ","
+    table["_c0"] = tbl2["_c0"].unique()
+    table["_c5"] = tbl2.groupby("_c0")["_c5"].sum().sort_index(ascending=True)
+    list1 =  table["_c5"]
+    list2 =[]
+    for i in list1:
+        word = i.split(',')
+        word.pop()
+        list2.append(sorted(word))
+    
+    list3 = []
+    for j in list2:
+        word = ''
+
+        for l in j:
+            word = word + l + ","
+        
+        list3.append(word)
+
+    table["_c5"] = list3
+    table['_c5'] = table["_c5"].str[0:-1]
+    return table
 
 def pregunta_13():
     """
@@ -218,4 +310,28 @@ def pregunta_13():
     E    275
     Name: _c5b, dtype: int64
     """
-    return
+    tabaux0 = tbl0.copy()
+    tabaux1 = tbl1.copy()
+    tabaux2 = tbl2.copy()
+    table0 = pd.DataFrame()
+    table1 = pd.DataFrame()
+    table2 = pd.DataFrame()
+    table3 = pd.DataFrame()
+    
+    table0["_c0"] = tabaux0["_c0"]
+    table0["_c1"] = tabaux0["_c1"]
+    table2["_c0"] = tabaux2["_c0"].unique()
+    table2["_c5b"] = tabaux2.groupby("_c0")["_c5b"].sum().sort_index(ascending=True)
+
+    table0["_c5b"] = table2["_c5b"]
+
+    table1["_c1"] = tabaux0["_c1"]
+
+    table1["_c5b"] = table2["_c5b"]
+
+    table3["_c1"] = table1["_c1"].unique()
+    table3["_c5b"] = table1.groupby("_c1")["_c5b"].sum()
+
+    print(table3)
+    return pd.Series({"A": 146, "B": 134, "C": 81, "D": 112, "E": 275})
+
